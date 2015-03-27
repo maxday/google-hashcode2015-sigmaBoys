@@ -34,27 +34,15 @@ public class Main {
 			
 			
 			int current = 0;
-			while(!checkLine(slices, theLine, i-1, current)) {
-				current++;
-				
-				if(current > varC - varS) {
+			int offset = 0;
+			
+			while(true) {
+				offset = checkLine(slices, theLine, i-1, current);
+				current = current+offset+1;
+				if(offset == 0)
 					break;
-				}
-				
 			}
 			
-			current = current+12;
-			
-			if(current < varC - varS) {
-				while(!checkLine(slices, theLine, i-1, current)) {
-					current++;
-					
-					if(current > varC - varS) {
-						break;
-					}
-					
-				}
-			}
 			
 			
 		}
@@ -74,18 +62,38 @@ public class Main {
 	}
 	
 	
-	public static boolean checkLine(List<Slice> slices, String line, int nbLine, int start)  {
+	public static int checkLine(List<Slice> slices, String line, int nbLine, int start)  {
 		int nbH = 0;
-		for(int j=start; j<start+11; ++j) {
+		boolean found = false;
+		int j;
+		for(j=start; j<start+11; ++j) {
+			if(j>=59) {
+				if(found) {
+					slices.add(new Slice(nbLine, start, nbLine, 59));
+					
+				}
+				return 0;
+			}
+				
 			if(line.charAt(j) == 'H') {
 				nbH++;
+				if(nbH == 3)  {
+					found = true;
+				}
+				
+				if(nbH == 4) {
+					slices.add(new Slice(nbLine, start, nbLine, j-1));
+					return j-start-1;
+				}
+			
 			}
+			
 		}
-		if(nbH >= 3)  {
-			slices.add(new Slice(nbLine, start, nbLine, start+11));
-			return true;
+		if(found) {
+			slices.add(new Slice(nbLine, start, nbLine, j));
+			return j-start;
 		}
-		return false;
+		return 1;
 	}
 	
 	
