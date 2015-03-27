@@ -30,41 +30,38 @@ public class Main {
 		
 		
 		for(int i=1; i<varR; ++i) {
-			String theLine = l.get(i);
+			String theLine = l.get(i); 
 			
 			
-			
-			
-			
-			
-			
-			int nbH = 0;
-			for(int j=0; j<12; ++j) {
-				if(theLine.charAt(j) == 'H') {
-					nbH++;
-				}
-			}
-			
-			if(nbH >= varH)  {  //slice OK
-				slices.add(new Slice(i-1, 0, i-1, 11));
-			}
-			
-			
-			nbH=0;
-			for(int j=12; j<23; ++j) {
-				if(theLine.charAt(j) == 'H') {
-					nbH++;
-				}
-			}
+			int current = 0;
+			while(!checkLine(slices, theLine, i-1, current)) {
+				current++;
 				
-			if(nbH >= varH)  {  //slice OK
-				slices.add(new Slice(i-1, 12, i-1, 23));
+				if(current > varC - varS) {
+					break;
+				}
+				
 			}
 			
+			current = current+12;
 			
+			if(current < varC - varS) {
+				while(!checkLine(slices, theLine, i-1, current)) {
+					current++;
+					
+					if(current > varC - varS) {
+						break;
+					}
+					
+				}
+			}
 			
 			
 		}
+		
+			
+			
+			
 		System.out.println(slices.size());
 		for(Slice s : slices) {
 			System.out.println(s);
@@ -75,6 +72,23 @@ public class Main {
 		
 
 	}
+	
+	
+	public static boolean checkLine(List<Slice> slices, String line, int nbLine, int start)  {
+		int nbH = 0;
+		for(int j=start; j<start+11; ++j) {
+			if(line.charAt(j) == 'H') {
+				nbH++;
+			}
+		}
+		if(nbH >= 3)  {
+			slices.add(new Slice(nbLine, start, nbLine, start+11));
+			return true;
+		}
+		return false;
+	}
+	
+	
 	
 	
 	public static List<String> read(final String filename) {
