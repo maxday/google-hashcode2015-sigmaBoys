@@ -12,6 +12,12 @@ public class Slice {
 		this.r2 = r2;
 		this.c2 = c2;
 	}
+
+	@Override
+	public String toString() {
+		return r1 + " " + c1 + " " + r2 + " " + c2;
+	}
+	
 	
 	
 }
