@@ -12,6 +12,47 @@ public class Main {
 	public static void main(String[] args) {
 		
 		System.out.println("kikoo !");
+		
+		
+		List<String> l = read("/Users/admin/Desktop/google-hashcode2015-sigmaBoys/sigma/test_round.in");
+		
+		List<Slice> slices = new ArrayList<Slice>();
+		
+		
+		System.out.println(l.get(0));
+		
+		String[] split = l.get(0).split(" ");
+		int varR = Integer.parseInt(split[0]);
+		int varC = Integer.parseInt(split[1]);
+		int varH = Integer.parseInt(split[2]);
+		int varS = Integer.parseInt(split[3]);
+		
+		System.out.println("R " + varR);
+		System.out.println("C " + varC);
+		System.out.println("H " + varH);
+		System.out.println("S " + varS);
+		
+		for(int i=1; i<varR; ++i) {
+			String theLine = l.get(i);
+			System.out.println(theLine);
+			
+			int nbH = 0;
+			for(int j=0; j<12; ++j) {
+				if(theLine.charAt(j) == 'H') {
+					nbH++;
+				}
+			}
+			
+			if(nbH >= varH)  {  //slice OK
+				slices.add(new Slice(i-1, 0, 12, i-1));
+				
+			}
+			
+		}
+		
+		
+		
+		
 
 	}
 	
