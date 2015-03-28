@@ -62,8 +62,14 @@ public class Main {
 		System.out.println("targetCellList size = " + targetCellList.size());
 		System.out.println("movVectorList size = " + movVectorList.size());
 		
+		System.out.println("nb item dans alt 0 = " + getArrayFromAltitude(movVectorList, 0));
+		System.out.println("nb item dans alt 1 = " + getArrayFromAltitude(movVectorList, 1));
+		System.out.println("nb item dans alt 2 = " + getArrayFromAltitude(movVectorList, 2));
+		System.out.println("nb item dans alt 2 = " + getArrayFromAltitude(movVectorList, 3));
+		System.out.println("nb item dans alt 2 = " + getArrayFromAltitude(movVectorList, 4));
+		System.out.println("nb item dans alt 2 = " + getArrayFromAltitude(movVectorList, 5));
+	
 	}
-
 	
 	public static List<String> read(final String filename) {
 		
@@ -90,6 +96,18 @@ public class Main {
 		}
 	    return read;
 	}
+	
+	public static String getArrayFromAltitude(List<MovVector> movVectorList, int altitude) {
+		List<MovVector> okList = new ArrayList<MovVector>();
+		for(MovVector movV : movVectorList) {
+			if(movV.alt == altitude) {
+				okList.add(movV);
+			}
+		}
+		return okList.size()+"";
+	}
+	
+	
 	
 	/*
 	PrintWriter writer = new PrintWriter("the-file-name.txt", "UTF-8");
