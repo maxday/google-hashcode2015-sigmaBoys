@@ -14,9 +14,8 @@ public class Main {
 		List<String> lines = read("final_round.in");
 		
 		List<TargetCell> targetCellList = new ArrayList<TargetCell>(); 
+		List<MovVector> movVectorList = new ArrayList<MovVector>();
 		
-		System.out.println(lines.get(0));
-		System.out.println(lines.get(1));
 		
 		int r = 75;
 		int c = 300;
@@ -28,22 +27,40 @@ public class Main {
 		int t = 400;
 		
 		//departure cell of baloons
-		System.out.println(lines.get(2));
+		//System.out.println(lines.get(2));
 		
 		
 		//parsing Target cells
 		for(int i=0; i<l; ++i) {
-			System.out.println(lines.get(i+3));
 			String[] split = lines.get(i+3).split(" ");
 			TargetCell targetCell = new TargetCell(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
-			System.out.println(targetCell);
 			targetCellList.add(targetCell);
 			
 		}
 		
 		
 		//parsing sections
+		for(int i=0; i<a; ++i)  {
+			
+			//R subsections
+			for(int j=0; j<r; ++j) {
+				
+				String[] numbers = lines.get(i+3+l+j).split(" ");
+				
+				for(int k=0; k<numbers.length/2; ++k) {
+					Integer deltaR = Integer.parseInt(numbers[k]);
+					Integer deltaC = Integer.parseInt(numbers[k+1]);				
+					MovVector movVector = new MovVector(j, deltaR, deltaC);
+					movVectorList.add(movVector);
+				}
+				
+			}
+			
+		}
 		
+		
+		System.out.println("targetCellList size = " + targetCellList.size());
+		System.out.println("movVectorList size = " + movVectorList.size());
 		
 	}
 
