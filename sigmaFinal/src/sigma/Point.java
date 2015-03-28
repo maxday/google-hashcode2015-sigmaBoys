@@ -8,6 +8,16 @@ public class Point {
 	static int R = 75;
 	static int C = 300;
 	
+	
+	public Point(int r, int c) {
+		this.r = r;
+		this.c = c;
+	}
+	
+	
+	
+	
+	
 	public int distance(Point p) {
 
 		int rowdist = Math.abs(this.r - p.r);
@@ -23,5 +33,15 @@ public class Point {
 
 		return columndist + rowdist;
 	}
+
+
+
+
+	@Override
+	public String toString() {
+		return "Point [r=" + r + ", c=" + c + "]";
+	}
+	
+	
 
 }

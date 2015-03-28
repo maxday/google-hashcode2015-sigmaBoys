@@ -27,7 +27,10 @@ public class Main {
 		int t = 400;
 		
 		//departure cell of baloons
-		//System.out.println(lines.get(2));
+		int startR = 24;
+		int startC = 167;
+		
+		
 		MovVector[][][] bigTable = new MovVector[a][r][c];
 		
 		//parsing Target cells
@@ -70,6 +73,40 @@ public class Main {
 		
 		
 		System.out.println(bigTable[7][74][0]);
+		
+		List<Loon> loonList = new ArrayList<Loon>();
+		
+		
+		
+		for(int i=0; i<l; ++i) {
+			Loon loon = new Loon(startR, startC, new Point(50,50));
+			loonList.add(loon);
+			loon.up(bigTable);
+		
+		}
+		
+		for(int i=1; i<t; ++i) {
+
+			for(Loon myLoon : loonList) {
+				myLoon.move(bigTable);
+			}
+			
+			System.out.println("i = " + i);
+			System.out.println(loonList.get(0));
+		}
+		
+		
+		
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 	
 	}
