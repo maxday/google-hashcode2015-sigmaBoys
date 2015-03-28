@@ -28,7 +28,7 @@ public class Main {
 		
 		//departure cell of baloons
 		//System.out.println(lines.get(2));
-		
+		MovVector[][][] bigTable = new MovVector[a][r][c];
 		
 		//parsing Target cells
 		for(int i=0; i<l; ++i) {
@@ -45,13 +45,16 @@ public class Main {
 			//R subsections
 			for(int j=0; j<r; ++j) {
 				
-				String[] numbers = lines.get(i+3+l+j).split(" ");
-				
-				for(int k=0; k<numbers.length/2; ++k) {
+				String[] numbers = lines.get(i*r+3+l+j).split(" ");
+
+				for(int k=0; k<numbers.length; k = k+2) {
 					Integer deltaR = Integer.parseInt(numbers[k]);
-					Integer deltaC = Integer.parseInt(numbers[k+1]);				
-					MovVector movVector = new MovVector(j, deltaR, deltaC);
-					movVectorList.add(movVector);
+					Integer deltaC = Integer.parseInt(numbers[k+1]);
+					
+					MovVector movVector = new MovVector(i, deltaR, deltaC);
+					bigTable[i][j][k/2] = movVector;
+					
+					
 				}
 				
 			}
@@ -62,12 +65,12 @@ public class Main {
 		System.out.println("targetCellList size = " + targetCellList.size());
 		System.out.println("movVectorList size = " + movVectorList.size());
 		
-		System.out.println("nb item dans alt 0 = " + getArrayFromAltitude(movVectorList, 0));
-		System.out.println("nb item dans alt 1 = " + getArrayFromAltitude(movVectorList, 1));
-		System.out.println("nb item dans alt 2 = " + getArrayFromAltitude(movVectorList, 2));
-		System.out.println("nb item dans alt 2 = " + getArrayFromAltitude(movVectorList, 3));
-		System.out.println("nb item dans alt 2 = " + getArrayFromAltitude(movVectorList, 4));
-		System.out.println("nb item dans alt 2 = " + getArrayFromAltitude(movVectorList, 5));
+		System.out.println("nb item dans alt 0 = " + getArrayFromAltitude(movVectorList, r, c, 0));
+		
+		
+		
+		System.out.println(bigTable[7][74][0]);
+		
 	
 	}
 	
@@ -97,14 +100,22 @@ public class Main {
 	    return read;
 	}
 	
-	public static String getArrayFromAltitude(List<MovVector> movVectorList, int altitude) {
-		List<MovVector> okList = new ArrayList<MovVector>();
+	public static String getArrayFromAltitude(List<MovVector> movVectorList, int nbColonne, int nbLigne, int altitude) {
+		MovVector[][] result = new MovVector[nbLigne][nbColonne];
+		int i = 0;
+		int j = 0;
 		for(MovVector movV : movVectorList) {
 			if(movV.alt == altitude) {
-				okList.add(movV);
+				result[i][j] = movV;
+				j++;
+			}
+			if(j==nbColonne) {
+				++i;
+				j=0;
 			}
 		}
-		return okList.size()+"";
+		System.out.println(result[1][8]);
+		return "";
 	}
 	
 	
