@@ -1,5 +1,6 @@
 package sigma;
 
+import javax.swing.text.Position;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -13,7 +14,7 @@ public class Main {
 
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
 		
-		List<String> lines = read("final_round.in");
+		List<String> lines = read("C:\\Users\\VH186007\\java-workspace\\google-hashcode2015-sigmaBoys4\\sigmaFinal\\final_round.in");
 		
 		List<TargetCell> targetCellList = new ArrayList<TargetCell>(); 
 		List<MovVector> movVectorList = new ArrayList<MovVector>();
@@ -33,7 +34,7 @@ public class Main {
 		int startC = 167;
 		
 		
-		MovVector[][][] bigTable = new MovVector[a][r][c];
+		MovVector[][][] bigTable = new MovVector[a+1][r][c];
 		
 		//parsing Target cells
 		for(int i=0; i<l; ++i) {
@@ -43,7 +44,7 @@ public class Main {
 			
 		}
 		
-		
+
 		//parsing sections
 		for(int i=0; i<a; ++i)  {
 			
@@ -57,8 +58,8 @@ public class Main {
 					Integer deltaC = Integer.parseInt(numbers[k+1]);
 					
 					MovVector movVector = new MovVector(i, deltaR, deltaC);
-					bigTable[i][j][k/2] = movVector;
-					
+					bigTable[i+1][j][k/2] = movVector;
+					bigTable[0][j][k/2] = new MovVector(0, 0, 0);
 					
 				}
 				
@@ -77,7 +78,19 @@ public class Main {
 		
 		
 		for(int i=0; i<b; ++i) {
-			Loon loon = new Loon(startR, startC, new Point(randomWithRange(0, r), randomWithRange(0, c)));
+			Loon loon = new Loon(startR, startC, new Point(i,0));
+
+			// debug victor
+			/*
+			if (i==0) {
+				ArrayList<PositionTarget> targetList = new ArrayList<PositionTarget>();
+				targetList.add(new PositionTarget(loon, new ArrayList<Integer>()));
+				ArrayList<PositionTarget> reachablePositions = loon.getReachablePositions(6, targetList, bigTable);
+				System.out.println(reachablePositions.toString());
+			}
+*/
+			// end debug victor
+
 			loonList.add(loon);
 			loon.up(bigTable);
 			
@@ -86,9 +99,10 @@ public class Main {
 		writer.println();
 		
 		for(int i=1; i<400; ++i) {
-
+			System.out.println("Step " + i);
 			for(Loon myLoon : loonList) {
-				int mv = myLoon.move(bigTable);
+				int mv = myLoon.move(10, bigTable);
+				//System.out.println(myLoon);
 				writer.print(mv + " ");
 			}
 			

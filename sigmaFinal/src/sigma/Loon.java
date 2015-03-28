@@ -1,5 +1,8 @@
 package sigma;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class Loon {
 
 	int currentPosR;
@@ -18,6 +21,13 @@ public class Loon {
 	
 	public Loon(int startR, int startC, Point goal) {
 		this.currentAlt = 0;
+		this.currentPosR = startR;
+		this.currentPosC = startC;
+		this.goal = goal;
+	}
+
+	public Loon(int startR, int startC, Point goal, int alt) {
+		this.currentAlt = alt;
 		this.currentPosR = startR;
 		this.currentPosC = startC;
 		this.goal = goal;
@@ -61,9 +71,10 @@ public class Loon {
 
 	}
 	
-	public int move(MovVector[][][] matrix) {
+	public int move(int steps, MovVector[][][] matrix) {
 		
-		int direction = rightDecision(matrix);
+		//int direction = rightDecision(matrix);
+		int direction = nextChoice(steps, matrix);
 		
 		if(direction == 1) {
 			up(matrix);
@@ -84,17 +95,20 @@ public class Loon {
 		
 		Point up = getNextPosition(1, matrix);
 		int dUp = (null == up) ? 100000 : Point.distance(up, goal);
-		
+
 		Point down = getNextPosition(-1, matrix);
 		int dDown = (null == down) ? 100000 : Point.distance(down, goal);
-		
+
 		Point stay = getNextPosition(0, matrix);
-		int dStay = Point.distance(stay, goal);
+		int dStay = (null == stay) ? 100000 : Point.distance(stay, goal);
 		
-		
-		
-		int min = Math.min(dUp, Math.min(dUp, dStay));
-		
+
+		int min = Math.min(dUp, Math.min(dDown, dStay));
+		// System.out.println(min);
+
+
+
+
 		if(dUp == min)
 			return 1;
 		
@@ -110,14 +124,14 @@ public class Loon {
 		int c = 300;
 		int r = 75;
 		int maxAlt = 7;
-		
+
 		if(altitudeChoice == 0) {
 			MovVector vector = matrix[currentAlt][currentPosR][currentPosC];
 			
 			int newR = currentPosR + vector.deltaR;
-			int newC = (currentPosC + vector.deltaC) % c;
+			int newC = (currentPosC + vector.deltaC + 600) % c;
 			
-			if(newR >= r)  {
+			if(newR >= r || newR < 0)  {
 				//lost loon ;/
 				return null;
 			}
@@ -130,9 +144,9 @@ public class Loon {
 			MovVector vector = matrix[currentAlt-1][currentPosR][currentPosC];
 			
 			int newR = currentPosR + vector.deltaR;
-			int newC = (currentPosC + vector.deltaC) % c;
+			int newC = (currentPosC + vector.deltaC + 900) % c;
 			
-			if(newR >= r)  {
+			if(newR >= r || newR < 0)  {
 				//lost loon ;/
 				return null;
 			}
@@ -142,21 +156,75 @@ public class Loon {
 		}
 		
 		if(altitudeChoice == 1 && currentAlt < maxAlt) {
-			MovVector vector = matrix[currentAlt+1][currentPosR][currentPosC];
-			
-			int newR = currentPosR + vector.deltaR;
-			int newC = (currentPosC + vector.deltaC) % c;
-			
-			if(newR >= r)  {
-				//lost loon ;/
-				return null;
-			}
-			else {
-				return new Point(newR, newC);
+
+			try {
+				MovVector vector = matrix[currentAlt + 1][currentPosR][currentPosC];
+
+				int newR = currentPosR + vector.deltaR;
+				int newC = (currentPosC + vector.deltaC + 900) % c;
+
+				if(newR >= r || newR < 0)  {
+					/* lost loon */
+					return null;
+				}
+				else {
+					return new Point(newR, newC);
+				}
+			} catch (Exception e) {
+				System.out.println("toto");
 			}
 		}
 		
 		return null;
+	}
+
+	public ArrayList<PositionTarget> getReachablePositions(int step, ArrayList<PositionTarget> listPositions, MovVector[][][] matrix) {
+		ArrayList<PositionTarget> newList = new ArrayList<PositionTarget>();
+		if (step == 1) {
+			for (PositionTarget p : listPositions) {
+				Point pUp = p.getLoon().getNextPosition(+1, matrix);
+				if (pUp != null) {
+					Loon newPointUp = new Loon(pUp.r, pUp.c, null, p.getLoon().currentAlt + 1);
+					ArrayList<Integer> path = new ArrayList<Integer>(p.seq);
+					path.add(+1);
+					newList.add(new PositionTarget(newPointUp, path));
+				}
+
+				Point pDown = p.getLoon().getNextPosition(-1, matrix);
+				if (pDown != null) {
+					Loon newPointDown = new Loon(pDown.r, pDown.c, null, p.getLoon().currentAlt - 1);
+					ArrayList<Integer> path = new ArrayList<Integer>(p.seq);
+					path.add(-1);
+					newList.add(new PositionTarget(newPointDown, path));
+				}
+
+				Point pStay = p.getLoon().getNextPosition(0, matrix);
+				if (pStay != null) {
+					Loon newPointStay = new Loon(pStay.r, pStay.c, null, p.getLoon().currentAlt);
+					ArrayList<Integer> path = new ArrayList<Integer>(p.seq);
+					path.add(0);
+					newList.add(new PositionTarget(newPointStay, path));
+				}
+			}
+			return newList;
+		} else {
+			newList.addAll(this.getReachablePositions(1, listPositions, matrix));
+			return this.getReachablePositions(step - 1, newList, matrix);
+		}
+	}
+
+	public int nextChoice(int steps, MovVector[][][] matrix) {
+		ArrayList<PositionTarget> al = new ArrayList<PositionTarget>();
+		al.add(new PositionTarget(this, new ArrayList<Integer>()));
+		ArrayList<PositionTarget> l = this.getReachablePositions(steps, al, matrix);
+
+		ArrayList<Integer> listDistance = new ArrayList<Integer>();
+		for (PositionTarget pt : l) {
+			listDistance.add(Point.distance(pt.getPoint(), this.goal));
+		}
+		int minIndex = listDistance.indexOf(Collections.min(listDistance)); // plusieurs égalités ?
+
+		return l.get(minIndex).seq.get(0);
 	}
 
 	@Override
