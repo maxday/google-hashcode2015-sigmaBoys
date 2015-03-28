@@ -78,7 +78,7 @@ public class Main {
 		
 		
 		for(int i=0; i<b; ++i) {
-			Loon loon = new Loon(startR, startC, new Point(i,0));
+			Loon loon = new Loon(startR, startC, new Point(randomWithRange(0,74), randomWithRange(0,299)));
 
 			// debug victor
 			/*
@@ -101,7 +101,13 @@ public class Main {
 		for(int i=1; i<400; ++i) {
 			System.out.println("Step " + i);
 			for(Loon myLoon : loonList) {
-				int mv = myLoon.move(10, bigTable);
+
+				int randomInList = randomWithRange(0, targetCellList.size()-1);
+				Point p = new Point(targetCellList.get(randomInList).r,targetCellList.get(randomInList).c);
+				myLoon.goal = p;
+
+				int mv = myLoon.move(9, bigTable);
+
 				//System.out.println(myLoon);
 				writer.print(mv + " ");
 			}
@@ -177,8 +183,7 @@ public class Main {
 	   int range = (max - min) + 1;     
 	   return (int)(Math.random() * range) + min;
 	}
-	
-	
+
 	/*
 	
 	
