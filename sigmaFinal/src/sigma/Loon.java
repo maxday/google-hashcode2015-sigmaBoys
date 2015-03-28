@@ -10,6 +10,12 @@ public class Loon {
 
 	Point goal;
 	
+	
+	public int randomWithRange(int min, int max) {
+		   int range = (max - min) + 1;     
+		   return (int)(Math.random() * range) + min;
+		}
+	
 	public Loon(int startR, int startC, Point goal) {
 		this.currentAlt = 0;
 		this.currentPosR = startR;
@@ -55,7 +61,7 @@ public class Loon {
 
 	}
 	
-	public void move(MovVector[][][] matrix) {
+	public int move(MovVector[][][] matrix) {
 		
 		int direction = rightDecision(matrix);
 		
@@ -70,7 +76,7 @@ public class Loon {
 		if(direction == 0) {
 			stay(matrix);
 		}
-		
+		return direction;
 	}
 	
 	public int rightDecision(MovVector[][][] matrix)  {
@@ -85,9 +91,7 @@ public class Loon {
 		Point stay = getNextPosition(0, matrix);
 		int dStay = Point.distance(stay, goal);
 		
-		System.out.println(dUp);
-		System.out.println(dDown);
-		System.out.println(dStay);
+		
 		
 		int min = Math.min(dUp, Math.min(dUp, dStay));
 		

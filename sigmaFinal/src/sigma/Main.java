@@ -4,12 +4,14 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
 		
 		List<String> lines = read("final_round.in");
 		
@@ -65,36 +67,35 @@ public class Main {
 		}
 		
 		
-		System.out.println("targetCellList size = " + targetCellList.size());
-		System.out.println("movVectorList size = " + movVectorList.size());
-		
-		System.out.println("nb item dans alt 0 = " + getArrayFromAltitude(movVectorList, r, c, 0));
-		
-		
-		
-		System.out.println(bigTable[7][74][0]);
+
 		
 		List<Loon> loonList = new ArrayList<Loon>();
 		
 		
+		PrintWriter writer = new PrintWriter("out.txt", "UTF-8");
 		
-		for(int i=0; i<l; ++i) {
-			Loon loon = new Loon(startR, startC, new Point(50,50));
+		
+		
+		for(int i=0; i<b; ++i) {
+			Loon loon = new Loon(startR, startC, new Point(randomWithRange(0, r), randomWithRange(0, c)));
 			loonList.add(loon);
 			loon.up(bigTable);
-		
+			
+			writer.print("1 ");
 		}
+		writer.println();
 		
-		for(int i=1; i<t; ++i) {
+		for(int i=1; i<400; ++i) {
 
 			for(Loon myLoon : loonList) {
-				myLoon.move(bigTable);
+				int mv = myLoon.move(bigTable);
+				writer.print(mv + " ");
 			}
 			
-			System.out.println("i = " + i);
-			System.out.println(loonList.get(0));
+			writer.println();
 		}
 		
+		writer.close();
 		
 		
 
@@ -156,12 +157,16 @@ public class Main {
 	}
 	
 	
+
+	public static int randomWithRange(int min, int max)
+	{
+	   int range = (max - min) + 1;     
+	   return (int)(Math.random() * range) + min;
+	}
+	
 	
 	/*
-	PrintWriter writer = new PrintWriter("the-file-name.txt", "UTF-8");
-	writer.println("The first line");
-	writer.println("The second line");
-	writer.close();
+	
 	
 	zip -r archive_name.zip src/ 
 	*/
