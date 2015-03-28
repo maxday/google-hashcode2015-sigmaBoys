@@ -12,8 +12,6 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		// Commentaire de Victor : bonne chance les gars !
-		//Merci dude ! toto
 		//List<String> l = read("test_round.in");
 	}
 
